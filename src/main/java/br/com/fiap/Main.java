@@ -24,9 +24,16 @@ public class Main {
         // in br.com.fiap package
         final ResourceConfig rc = new ResourceConfig().packages("br.com.fiap");
 
+        String port = System.getenv("PORT");
+        if (port == null || port.isEmpty()) {
+            port = "8080"; // Porta padrão para desenvolvimento local
+        }
+
+        URI baseUri = URI.create("http://0.0.0.0:" + port + "/");
+
         // create and start a new instance of grizzly http server
         // exposing the Jersey application at BASE_URI
-        return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
+        return GrizzlyHttpServerFactory.createHttpServer(baseUri, rc);
     }
 
     /**
