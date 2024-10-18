@@ -1,1 +1,1 @@
-web: java -Dserver.port=80 -jar target/games-1.0-SNAPSHOT.jar
+web: java -jar target/games-1.0-SNAPSHOT.jar
