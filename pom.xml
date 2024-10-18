@@ -41,7 +41,7 @@
          <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-binding</artifactId>
-        </dependency>
+         </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>

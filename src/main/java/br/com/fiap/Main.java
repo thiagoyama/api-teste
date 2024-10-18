@@ -2,6 +2,7 @@ package br.com.fiap;
 
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
+import org.glassfish.jersey.jsonb.JsonBindingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
 import java.io.IOException;
@@ -23,6 +24,7 @@ public class Main {
         // create a resource config that scans for JAX-RS resources and providers
         // in br.com.fiap package
         final ResourceConfig rc = new ResourceConfig().packages("br.com.fiap");
+        rc.register(JsonBindingFeature.class);
 
         String port = System.getenv("PORT");
         if (port == null || port.isEmpty()) {
