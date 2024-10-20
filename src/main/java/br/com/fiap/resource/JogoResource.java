@@ -7,6 +7,7 @@ import br.com.fiap.dto.jogo.JogoUpdateDto;
 import br.com.fiap.exception.EntidadeNaoEncontradaException;
 import br.com.fiap.factory.ConnectionFactory;
 import br.com.fiap.model.Jogo;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 
@@ -31,7 +32,7 @@ public class JogoResource {
     }
 
     @POST
-    public Response cadastrar(JogoCreateDto jogoCreateDTO, @Context UriInfo uriInfo) throws SQLException {
+    public Response cadastrar(@Valid JogoCreateDto jogoCreateDTO, @Context UriInfo uriInfo) throws SQLException {
         Jogo jogo = modelMapper.map(jogoCreateDTO, Jogo.class);
         jogo.setDataCadastro(LocalDateTime.now()); // Definir a data de cadastro
         jogoDao.cadastrar(jogo);
@@ -39,6 +40,12 @@ public class JogoResource {
         UriBuilder builder = uriInfo.getAbsolutePathBuilder();
         builder.path(String.valueOf(jogo.getCodigo()));
         return Response.created(builder.build()).entity(modelMapper.map(jogo, JogoDetailDto.class)).build();
+    }
+
+    @GET
+    @Path("query")
+    public List<JogoDetailDto> pesquisar(@DefaultValue("") @QueryParam("nome") String nome) throws SQLException {
+        return jogoDao.pesquisarPorNome(nome).stream().map(j -> modelMapper.map(j, JogoDetailDto.class)).collect(Collectors.toList());
     }
 
     @GET
@@ -58,7 +65,7 @@ public class JogoResource {
 
     @PUT
     @Path("/{id}")
-    public Response atualizar(@PathParam("id") Integer id, JogoUpdateDto jogoUpdateDTO) throws SQLException, EntidadeNaoEncontradaException {
+    public Response atualizar(@PathParam("id") Integer id, @Valid JogoUpdateDto jogoUpdateDTO) throws SQLException, EntidadeNaoEncontradaException {
         Jogo jogoExistente = jogoDao.buscarPorId(id);
         modelMapper.map(jogoUpdateDTO, jogoExistente); // Atualiza o jogo existente com os dados do DTO
         jogoDao.atualizar(jogoExistente);

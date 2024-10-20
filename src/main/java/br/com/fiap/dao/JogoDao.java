@@ -16,6 +16,7 @@ public class JogoDao {
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM tb_jogo WHERE cd_jogo = ?";
     private static final String SQL_UPDATE = "UPDATE tb_jogo SET nm_jogo = ?, ds_jogo = ?, ds_plataforma = ?, dt_lancamento = ?, vl_jogo = ?, st_multiplayer = ?, dt_atualizacao = ?, img_url = ? WHERE cd_jogo = ?";
     private static final String SQL_DELETE = "DELETE FROM tb_jogo WHERE cd_jogo = ?";
+    private static final String SQL_SELECT_BY_NAME = "SELECT * FROM tb_jogo WHERE upper(nm_jogo) like upper(?)";
 
     private Connection connection;
 
@@ -48,6 +49,18 @@ public class JogoDao {
         }
 
         return jogos;
+    }
+
+    public List<Jogo> pesquisarPorNome(String nome) throws SQLException {
+        List<Jogo> lista = new ArrayList<>();
+        try (PreparedStatement stmt = connection.prepareStatement(SQL_SELECT_BY_NAME)){
+            stmt.setString(1, "%" + nome + "%");
+            try (ResultSet rs = stmt.executeQuery()){
+                while (rs.next())
+                    lista.add(parseJogo(rs));
+            }
+        }
+        return lista;
     }
 
     // Método para buscar um jogo por ID (READ), lança JogoNaoEncontradoException se não encontrar
